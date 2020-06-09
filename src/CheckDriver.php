@@ -8,13 +8,21 @@ use AmazeeIO\Health\Check\CheckInterface;
 class CheckDriver
 {
 
-    protected $registeredChecks;
+    protected $registeredChecks = [];
 
-    protected $applicableChecks;
+    protected $applicableChecks = [];
 
     public function __construct()
     {
 
+    }
+
+    public function runChecks()
+    {
+        foreach ($this->applicableChecks as $name => $check) {
+            /** @var CheckInterface */
+            $check->pass();
+        }
     }
 
     public function registerCheck(CheckInterface $check)
@@ -22,7 +30,7 @@ class CheckDriver
         $this->storeRegisteredCheck($check);
 
         if ($check->appliesInCurrentEnvironment()) {
-
+            $this->queueCheckToRun($check);
         }
     }
 

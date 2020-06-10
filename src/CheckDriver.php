@@ -19,10 +19,12 @@ class CheckDriver
 
     public function runChecks()
     {
+        $checkResults = [];
         foreach ($this->applicableChecks as $name => $check) {
-            /** @var CheckInterface */
-            $check->pass();
+            $checkResults[$check->shortName()] = $check->pass();
         }
+
+        return $checkResults;
     }
 
     public function registerCheck(CheckInterface $check)

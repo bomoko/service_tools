@@ -13,7 +13,8 @@ class CheckDriverTest extends TestCase
     public function it_should_run_applicable_checks()
     {
         $checkDriver = new \AmazeeIO\Health\CheckDriver();
-        $checkDriver->registerCheck($this->generateApplicableCheck());
+        $checkDriver->registerCheck($this->generateCheck("applicable", "", true,
+          true));
         $checkDriver->runChecks();
     }
 
@@ -23,29 +24,45 @@ class CheckDriverTest extends TestCase
     public function it_should_ignore_nonapplicable_checks()
     {
         $checkDriver = new \AmazeeIO\Health\CheckDriver();
-        $checkDriver->registerCheck($this->generateNonApplicableCheck());
+        $checkDriver->registerCheck($this->generateCheck("not_applicable", "",
+          false));
         $checkDriver->runChecks();
     }
 
-    protected function generateApplicableCheck()
+    /** @test */
+    public function it_should_return_a_list_of_checks_that_have_run()
     {
-        $check = $this->createMock(\AmazeeIO\Health\Check\CheckInterface::class);
-        $check->expects($this->atLeastOnce())
-          ->method('appliesInCurrentEnvironment')
-          ->willReturn(true);
-        $check->expects($this->once())
-          ->method('pass');
-        return $check;
+        $checkDriver = new \AmazeeIO\Health\CheckDriver();
+        $checkDriver->registerCheck($this->generateCheck("applicable_passes",
+          "a passing check", true, true));
+        $checkDriver->registerCheck($this->generateCheck("applicable_fails",
+          "a failing check", true, false));
+
+        $results = $checkDriver->runChecks();
+
+        $this->assertIsArray($results);
+        $this->assertArrayHasKey('applicable_passes', $results);
+        $this->assertArrayHasKey('applicable_fails', $results);
+        $this->assertTrue($results['applicable_passes']);
+        $this->assertFalse($results['applicable_fails']);
+
     }
 
-    protected function generateNonApplicableCheck()
-    {
+    protected function generateCheck(
+      $shortName,
+      $description = "",
+      $applies = true,
+      $passes = true
+    ) {
         $check = $this->createMock(\AmazeeIO\Health\Check\CheckInterface::class);
+        $check->method('shortName')->willReturn($shortName);
+        $check->method('description')->willReturn($description);
         $check->expects($this->atLeastOnce())
           ->method('appliesInCurrentEnvironment')
-          ->willReturn(false);
-        $check->expects($this->never())
-          ->method('pass');
+          ->willReturn($applies);
+        $check->expects($applies ? $this->once() : $this->never())
+          ->method('pass')
+          ->willReturn($passes);
         return $check;
     }
 }

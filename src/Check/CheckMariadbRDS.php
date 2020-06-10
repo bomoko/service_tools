@@ -3,7 +3,7 @@
 namespace AmazeeIO\Health\Check;
 
 
-class CheckRDS implements CheckInterface
+class CheckMariadbRDS implements CheckInterface
 {
     private $db_host = null;
     private $db_username = null;
@@ -23,18 +23,20 @@ class CheckRDS implements CheckInterface
 
     public function pass()
     {
-        // TODO: Implement pass() method.
+        //Set up PDO
     }
 
     public function description()
     {
-        // TODO: Implement description() method.
+        return "This test will attempt to connect to a database (if configured) and perform a simple read and write";
     }
 
     public function shortName()
     {
-        // TODO: Implement shortName() method.
+        return 'check_mariadb_rds';
     }
+
+
 
 
 }

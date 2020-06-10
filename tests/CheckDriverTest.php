@@ -23,6 +23,7 @@ class CheckDriverTest extends TestCase
      */
     public function it_should_ignore_nonapplicable_checks()
     {
+        $this->expectException(\AmazeeIO\Health\NoApplicableCheckException::class);
         $checkDriver = new \AmazeeIO\Health\CheckDriver();
         $checkDriver->registerCheck($this->generateCheck("not_applicable", "",
           false));
@@ -45,7 +46,16 @@ class CheckDriverTest extends TestCase
         $this->assertArrayHasKey('applicable_fails', $results);
         $this->assertTrue($results['applicable_passes']);
         $this->assertFalse($results['applicable_fails']);
+    }
 
+    /** @test */
+    public function it_should_throw_an_error_if_attempted_to_run_with_no_applicable_tests()
+    {
+        $this->expectException(\AmazeeIO\Health\NoApplicableCheckException::class);
+        $checkDriver = new \AmazeeIO\Health\CheckDriver();
+        $checkDriver->registerCheck($this->generateCheck("not_applicable", "",
+          false));
+        $checkDriver->runChecks();
     }
 
     protected function generateCheck(

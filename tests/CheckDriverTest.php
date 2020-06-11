@@ -58,6 +58,30 @@ class CheckDriverTest extends TestCase
         $checkDriver->runChecks();
     }
 
+    /** @test */
+    public function it_should_run_checks_and_return_true_when_pass_function_is_called()
+    {
+        $checkDriver = new \AmazeeIO\Health\CheckDriver();
+        $checkDriver->registerCheck($this->generateCheck("applicable_passes_1", "", true,
+          true));
+        $checkDriver->registerCheck($this->generateCheck("applicable_passes_2", "", true,
+          true));
+        $this->assertTrue($checkDriver->pass());
+    }
+
+    /** @test */
+    public function it_should_run_checks_and_return_false_when_pass_function_is_called_and_at_least_one_check_fails()
+    {
+        $checkDriver = new \AmazeeIO\Health\CheckDriver();
+        $checkDriver->registerCheck($this->generateCheck("applicable_passes_1", "", true,
+          true));
+        $checkDriver->registerCheck($this->generateCheck("applicable_passes_2", "", true,
+          true));
+        $checkDriver->registerCheck($this->generateCheck("applicable_fails_1", "", true,
+          false));
+        $this->assertFalse($checkDriver->pass());
+    }
+
     protected function generateCheck(
       $shortName,
       $description = "",

@@ -27,8 +27,13 @@ class CheckMariadbRDS implements CheckInterface
 
     public function pass()
     {
-        $db = $this->getConnection();
-        return $this->testRead($db);
+        try {
+            $db = $this->getConnection();
+            return $this->testRead($db);
+        } catch (\Exception $exception)
+        {
+            return false;
+        }
     }
 
     protected function testRead($conn)

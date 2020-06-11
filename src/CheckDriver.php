@@ -45,9 +45,9 @@ class CheckDriver
             $this->runChecks();
         }
 
-        return array_reduce($this->lastRunResults, function ($initial, $element) {
-            return $initial && $element;
-        }, true);
+        return array_reduce($this->lastRunResults, function ($carry, $element) {
+            return $carry && $element;
+            }, true);
     }
 
     public function registerCheck(CheckInterface $check)

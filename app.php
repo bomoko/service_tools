@@ -13,5 +13,3 @@ $driver = new CheckDriver();
 
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckMariadbRDS($_SERVER));
 
-var_dump($driver->runChecks());
-var_dump($driver->pass());

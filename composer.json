@@ -3,7 +3,9 @@
     "type": "project",
     "license": "MIT",
     "minimum-stability": "dev",
-    "require": {},
+    "require": {
+        "predis/predis": "2.0.x-dev"
+    },
     "autoload": {
         "psr-4":{
             "AmazeeIO\\Health\\": "src/"

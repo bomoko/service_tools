@@ -12,6 +12,7 @@ $driver = new CheckDriver();
 //TODO: maybe we can make this prettier - passing a list of classnames?
 
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckMariadbRDS($_SERVER));
+$driver->registerCheck(new \AmazeeIO\Health\Check\CheckRedis());
 
 $checkPass = $driver->pass();
 

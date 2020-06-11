@@ -13,6 +13,8 @@ $driver = new CheckDriver();
 
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckMariadbRDS($_SERVER));
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckRedis());
+$driver->registerCheck(new \AmazeeIO\Health\Check\CheckNginx());
+$driver->registerCheck(new \AmazeeIO\Health\Check\CheckPhp());
 
 $checkPass = $driver->pass();
 

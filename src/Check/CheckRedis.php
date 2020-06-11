@@ -7,7 +7,9 @@ use Predis\Client;
 
 class CheckRedis implements CheckInterface
 {
+
     protected $redis_host;
+
     protected $redis_port;
 
     public function __construct()
@@ -23,17 +25,21 @@ class CheckRedis implements CheckInterface
 
     public function pass()
     {
-        $client = new Client([
-          'scheme' => 'tcp',
-          'host'   => $this->redis_host,
-          'port'   => $this->redis_port,
-        ]);
+        try {
+            $client = new Client([
+              'scheme' => 'tcp',
+              'host' => $this->redis_host,
+              'port' => $this->redis_port,
+            ]);
 
-        $response = $client->executeRaw(array(
-          'PING'
-        ));
+            $response = $client->executeRaw([
+              'PING',
+            ]);
 
-        return $response == "PONG";
+            return $response == "PONG";
+        } catch (\Exception $exception) {
+            return false;
+        }
     }
 
     public function description()

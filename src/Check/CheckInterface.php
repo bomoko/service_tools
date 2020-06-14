@@ -12,12 +12,13 @@ interface CheckInterface
      */
     public function appliesInCurrentEnvironment();
 
+
     /**
-     * Does the check pass or fail?
+     * The result of the check
      *
-     * @return bool
+     * @return mixed
      */
-    public function pass();
+    public function result();
 
     /**
      * Generic description of what the check tests for

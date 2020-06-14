@@ -18,10 +18,13 @@ $driver->registerCheck(new \AmazeeIO\Health\Check\CheckPhp());
 
 $checkPass = $driver->pass();
 
-if(!$checkPass) {
-//    http_response_code(500);
+
+function setHeaders(\AmazeeIO\Health\Format\FormatInterface $formatter) {
+    header('Cache-Control: no-store');
+    header('Vary: User-Agent');
+    header('Content-Type: ' . $formatter->httpHeaderContentType());
 }
 
 
-header('Content-Type: application/json');
+setHeaders(new \AmazeeIO\Health\Format\JsonFormat($driver));
 echo json_encode(["healthy" => $checkPass]);

@@ -30,7 +30,7 @@ class CheckDriver implements CheckDriverInterface
 
         $checkResults = [];
         foreach ($this->applicableChecks as $name => $check) {
-            $checkResults[$check->shortName()] = $check->pass();
+            $checkResults[$check->shortName()] = $check->result();
         }
 
         $this->lastRunResults = $checkResults;

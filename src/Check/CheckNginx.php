@@ -2,7 +2,15 @@
 
 namespace AmazeeIO\Health\Check;
 
-
+/**
+ * Class CheckNginx
+ *
+ * This returns true for all checks at the moment since for the script to run
+ * it will be running on an Nginx server. Further rounds of development can
+ * integrate into the infrastructure more deeply.
+ *
+ * @package AmazeeIO\Health\Check
+ */
 class CheckNginx implements CheckInterface
 {
 
@@ -11,7 +19,7 @@ class CheckNginx implements CheckInterface
         return true;
     }
 
-    public function pass()
+    public function result()
     {
         return true;
     }

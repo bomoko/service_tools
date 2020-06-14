@@ -23,7 +23,7 @@ class CheckRedis implements CheckInterface
         return true;
     }
 
-    public function pass()
+    public function result()
     {
         try {
             $client = new Client([

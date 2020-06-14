@@ -2,7 +2,15 @@
 
 namespace AmazeeIO\Health\Check;
 
-
+/**
+ * Class CheckPhp
+ *
+ * This returns true for all checks at the moment since for the script to run
+ * it will be running on a working PHP instance. Further development can
+ * integrate into the infrastructure more deeply.
+ *
+ * @package AmazeeIO\Health\Check
+ */
 class CheckPhp implements CheckInterface
 {
 
@@ -11,7 +19,7 @@ class CheckPhp implements CheckInterface
         return true;
     }
 
-    public function pass()
+    public function result()
     {
         return true;
     }

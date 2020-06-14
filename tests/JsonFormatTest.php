@@ -18,7 +18,7 @@ class JsonFormatTest extends TestCase
 
         $formatterOutput = $jsonFormatter->formattedResults();
         $this->assertJson($formatterOutput);
-        $formatterOutputAsArray = json_decode($formatterOutput);
+        $formatterOutputAsArray = json_decode($formatterOutput, true);
         $this->assertIsArray($formatterOutputAsArray);
         $this->assertArrayHasKey('test_check_1', $formatterOutputAsArray);
         $this->assertEquals(true, $formatterOutputAsArray['test_check_1']);
@@ -37,7 +37,7 @@ class JsonFormatTest extends TestCase
           ->method('appliesInCurrentEnvironment')
           ->willReturn($applies);
         $check->expects($applies ? $this->once() : $this->never())
-          ->method('pass')
+          ->method('result')
           ->willReturn($passes);
         return $check;
     }

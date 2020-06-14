@@ -95,7 +95,7 @@ class CheckDriverTest extends TestCase
           ->method('appliesInCurrentEnvironment')
           ->willReturn($applies);
         $check->expects($applies ? $this->once() : $this->never())
-          ->method('pass')
+          ->method('result')
           ->willReturn($passes);
         return $check;
     }

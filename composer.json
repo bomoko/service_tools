@@ -4,7 +4,8 @@
     "license": "MIT",
     "minimum-stability": "dev",
     "require": {
-        "predis/predis": "2.0.x-dev"
+        "predis/predis": "2.0.x-dev",
+        "guzzlehttp/psr7": "2.0.x-dev"
     },
     "autoload": {
         "psr-4":{

@@ -5,7 +5,7 @@ namespace AmazeeIO\Health;
 
 use AmazeeIO\Health\Check\CheckInterface;
 
-class CheckDriver
+class CheckDriver implements CheckDriverInterface
 {
 
     protected $registeredChecks = [];

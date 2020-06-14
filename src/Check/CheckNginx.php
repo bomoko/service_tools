@@ -24,6 +24,16 @@ class CheckNginx implements CheckInterface
         return true;
     }
 
+
+    public function status()
+    {
+        if(!$this->pass()) {
+            return self::STATUS_FAIL;
+        }
+
+        return self::STATUS_PASS;
+    }
+
     public function description()
     {
         return "This check tests to see if Nginx is available";

@@ -82,11 +82,35 @@ class CheckDriverTest extends TestCase
         $this->assertFalse($checkDriver->pass());
     }
 
+    /** @test */
+    public function it_should_run_passing_checks_and_return_a_good_status_when_status_function_is_called()
+    {
+        $checkDriver = new \AmazeeIO\Health\CheckDriver();
+        $checkDriver->registerCheck($this->generateCheck("applicable_passes_1", "", true,
+          true));
+        $checkDriver->registerCheck($this->generateCheck("applicable_passes_2", "", true,
+          true));
+        $this->assertEquals(\AmazeeIO\Health\Check\CheckInterface::STATUS_PASS, $checkDriver->status());
+    }
+
+    /** @test */
+    public function it_should_run_passing_checks_and_return_a_warning_status_when_at_least_one_check_returns_warning()
+    {
+        $checkDriver = new \AmazeeIO\Health\CheckDriver();
+        $checkDriver->registerCheck($this->generateCheck("applicable_passes_1", "", true,
+          true));
+        $checkDriver->registerCheck($this->generateCheck("applicable_warning", "", true,
+          true, \AmazeeIO\Health\Check\CheckInterface::STATUS_WARN));
+        $this->assertEquals(\AmazeeIO\Health\Check\CheckInterface::STATUS_WARN, $checkDriver->status());
+    }
+
+
     protected function generateCheck(
       $shortName,
       $description = "",
       $applies = true,
-      $passes = true
+      $passes = true,
+      $status = \AmazeeIO\Health\Check\CheckInterface::STATUS_PASS
     ) {
         $check = $this->createMock(\AmazeeIO\Health\Check\CheckInterface::class);
         $check->method('shortName')->willReturn($shortName);
@@ -97,6 +121,7 @@ class CheckDriverTest extends TestCase
         $check->expects($applies ? $this->once() : $this->never())
           ->method('result')
           ->willReturn($passes);
+        $check->method('status')->willReturn($status);
         return $check;
     }
 }

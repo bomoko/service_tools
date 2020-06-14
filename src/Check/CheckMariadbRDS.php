@@ -25,7 +25,7 @@ class CheckMariadbRDS implements CheckInterface
         return true;
     }
 
-    public function pass()
+    public function result()
     {
         try {
             $db = $this->getConnection();
@@ -34,6 +34,15 @@ class CheckMariadbRDS implements CheckInterface
         {
             return false;
         }
+    }
+
+    public function status()
+    {
+        if(!$this->pass()) {
+            return self::STATUS_FAIL;
+        }
+
+        return self::STATUS_PASS;
     }
 
     protected function testRead($conn)

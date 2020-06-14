@@ -26,6 +26,7 @@ class CheckRedis implements CheckInterface
     public function result()
     {
         try {
+            //TODO: add reasonable timeout (.5 seconds)
             $client = new Client([
               'scheme' => 'tcp',
               'host' => $this->redis_host,
@@ -40,6 +41,16 @@ class CheckRedis implements CheckInterface
         } catch (\Exception $exception) {
             return false;
         }
+    }
+
+
+    public function status()
+    {
+        if(!$this->pass()) {
+            return self::STATUS_FAIL;
+        }
+
+        return self::STATUS_PASS;
     }
 
     public function description()

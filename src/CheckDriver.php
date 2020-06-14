@@ -14,6 +14,8 @@ class CheckDriver implements CheckDriverInterface
 
     protected $lastRunResults = null;
 
+    protected $lastRunResultStatuses = null;
+
     protected $hasRun = false;
 
     public function __construct()
@@ -29,11 +31,14 @@ class CheckDriver implements CheckDriverInterface
         }
 
         $checkResults = [];
+        $checkStatuses = [];
         foreach ($this->applicableChecks as $name => $check) {
             $checkResults[$check->shortName()] = $check->result();
+            $checkStatuses[$check->shortName()] = $check->status();
         }
 
         $this->lastRunResults = $checkResults;
+        $this->lastRunResultStatuses = $checkStatuses;
         $this->hasRun = true;
         return $checkResults;
     }
@@ -48,6 +53,25 @@ class CheckDriver implements CheckDriverInterface
         return array_reduce($this->lastRunResults, function ($carry, $element) {
             return $carry && $element;
             }, true);
+    }
+
+    public function status()
+    {
+        if(!$this->hasRun) {
+            $this->runChecks();
+        }
+
+        foreach ($this->lastRunResultStatuses as $status) {
+            switch($status) {
+                case(CheckInterface::STATUS_FAIL):
+                    return CheckInterface::STATUS_FAIL;
+                    break;
+                case(CheckInterface::STATUS_WARN):
+                    return CheckInterface::STATUS_WARN;
+                    break;
+            }
+        }
+        return CheckInterface::STATUS_PASS;
     }
 
     public function registerCheck(CheckInterface $check)

@@ -4,12 +4,19 @@ include_once(__DIR__ . "/vendor/autoload.php");
 
 use AmazeeIO\Health\CheckDriver;
 
+$psr17Factory = new \Nyholm\Psr7\Factory\Psr17Factory();
+
+$creator = new \Nyholm\Psr7Server\ServerRequestCreator(
+  $psr17Factory, // ServerRequestFactory
+  $psr17Factory, // UriFactory
+  $psr17Factory, // UploadedFileFactory
+  $psr17Factory  // StreamFactory
+);
+
+$serverRequest = $creator->fromGlobals();
+
 
 $driver = new CheckDriver();
-
-//Let's register the checks we want to run
-
-//TODO: maybe we can make this prettier - passing a list of classnames?
 
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckMariadbRDS($_SERVER));
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckRedis($_SERVER));
@@ -17,16 +24,12 @@ $driver->registerCheck(new \AmazeeIO\Health\Check\CheckNginx($_SERVER));
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckPhp($_SERVER));
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckSolr($_SERVER));
 
-$checkPass = $driver->pass();
-
-
-function setHeaders(\AmazeeIO\Health\Format\FormatInterface $formatter) {
-    header('Cache-Control: no-store');
-    header('Vary: User-Agent');
-    header('Content-Type: ' . $formatter->httpHeaderContentType());
-}
-
 $formatter = new \AmazeeIO\Health\Format\JsonFormat($driver);
 
-setHeaders($formatter);
-echo $formatter->formattedResults();
+$responseBody = $psr17Factory->createStream($formatter->formattedResults());
+$response = $psr17Factory->createResponse(200)->withBody($responseBody)
+  ->withHeader('Cache-Control','no-store')
+  ->withHeader('Vary','User-Agent')
+  ->withHeader('Content-Type', $formatter->httpHeaderContentType());
+
+(new \Zend\HttpHandlerRunner\Emitter\SapiEmitter())->emit($response);

@@ -27,7 +27,7 @@ class CheckNginx implements CheckInterface
 
     public function status()
     {
-        if(!$this->pass()) {
+        if(!$this->result()) {
             return self::STATUS_FAIL;
         }
 

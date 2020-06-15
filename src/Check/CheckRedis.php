@@ -31,6 +31,7 @@ class CheckRedis implements CheckInterface
               'scheme' => 'tcp',
               'host' => $this->redis_host,
               'port' => $this->redis_port,
+              'timeout' => '0.5',
             ]);
 
             $response = $client->executeRaw([
@@ -46,7 +47,7 @@ class CheckRedis implements CheckInterface
 
     public function status()
     {
-        if(!$this->pass()) {
+        if(!$this->result()) {
             return self::STATUS_FAIL;
         }
 

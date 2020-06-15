@@ -5,7 +5,8 @@
     "minimum-stability": "dev",
     "require": {
         "predis/predis": "2.0.x-dev",
-        "guzzlehttp/psr7": "2.0.x-dev"
+        "guzzlehttp/psr7": "2.0.x-dev",
+        "solarium/solarium": "^5.2"
     },
     "autoload": {
         "psr-4":{

@@ -61,17 +61,19 @@ class CheckDriver implements CheckDriverInterface
             $this->runChecks();
         }
 
+        $warning = false;
+
         foreach ($this->lastRunResultStatuses as $status) {
             switch($status) {
                 case(CheckInterface::STATUS_FAIL):
                     return CheckInterface::STATUS_FAIL;
                     break;
                 case(CheckInterface::STATUS_WARN):
-                    return CheckInterface::STATUS_WARN;
+                    $warning = true;
                     break;
             }
         }
-        return CheckInterface::STATUS_PASS;
+        return $warning ? CheckInterface::STATUS_WARN : CheckInterface::STATUS_PASS;
     }
 
     public function registerCheck(CheckInterface $check)

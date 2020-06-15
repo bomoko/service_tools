@@ -3,26 +3,36 @@
 namespace AmazeeIO\Health\Check;
 
 
+use AmazeeIO\Health\EnvironmentCollection;
+
 class CheckMariadbRDS implements CheckInterface
 {
-    protected $disabled = false;
+
+    protected $appliesInCurrentEnvironment = false;
+
     protected $db_host = null;
+
     protected $db_username = null;
+
     protected $db_password = null;
+
     protected $db_database = null;
 
 
-    public function __construct($env = [])
+    public function __construct(EnvironmentCollection $env)
     {
-        $this->db_host = !empty($env['MARIADB_HOST']) ? $env['MARIADB_HOST'] : $env['AMAZEEIO_DB_HOST'];
-        $this->db_username = !empty($env['MARIADB_USERNAME']) ? $env['MARIADB_USERNAME'] : $env['AMAZEEIO_DB_USERNAME'];
-        $this->db_password = !empty($env['MARIADB_PASSWORD']) ? $env['MARIADB_PASSWORD'] : $env['AMAZEEIO_DB_PASSWORD'];
-        $this->db_database = !empty($env['MARIADB_DATABASE']) ? $env['MARIADB_DATABASE'] : 'drupal';
+        if ($env->has(['AMAZEEIO_DB_HOST', 'AMAZEEIO_DB_USERNAME', 'AMAZEEIO_DB_PASSWORD'])) {
+            $this->appliesInCurrentEnvironment = true;
+            $this->db_host = $env->get('AMAZEEIO_DB_HOST');
+            $this->db_username = $env->get('AMAZEEIO_DB_USERNAME');
+            $this->db_password = $env->get('AMAZEEIO_DB_PASSWORD');
+            $this->db_database = $env->get('AMAZEEIO_SITENAME');
+        }
     }
 
     public function appliesInCurrentEnvironment()
     {
-        return true;
+        return $this->appliesInCurrentEnvironment;
     }
 
     public function result()
@@ -30,15 +40,14 @@ class CheckMariadbRDS implements CheckInterface
         try {
             $db = $this->getConnection();
             return $this->testRead($db);
-        } catch (\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             return false;
         }
     }
 
     public function status()
     {
-        if(!$this->result()) {
+        if (!$this->result()) {
             return self::STATUS_FAIL;
         }
 
@@ -66,11 +75,9 @@ class CheckMariadbRDS implements CheckInterface
     protected function getConnection()
     {
         $dsn = "mysql:host={$this->db_host};dbname={$this->db_database}";
-        try
-        {
+        try {
             $pdo = new \PDO($dsn, $this->db_username, $this->db_password);
-        } catch (\Exception $exception)
-        {
+        } catch (\Exception $exception) {
             throw $exception;
         }
         return $pdo;

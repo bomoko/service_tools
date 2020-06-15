@@ -2,12 +2,16 @@
 
 namespace AmazeeIO\Health\Check;
 
+use AmazeeIO\Health\EnvironmentCollection;
+
 interface CheckInterface
 {
 
     const STATUS_PASS = 'pass';
     const STATUS_FAIL = 'fail';
     const STATUS_WARN = 'warn';
+
+    public function __construct(EnvironmentCollection $environment);
 
     /**
      * Does the current check apply to the current set of services?

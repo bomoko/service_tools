@@ -2,6 +2,7 @@
 
 namespace AmazeeIO\Health\Check;
 
+use AmazeeIO\Health\EnvironmentCollection;
 use Predis\Client;
 
 
@@ -12,15 +13,20 @@ class CheckRedis implements CheckInterface
 
     protected $redis_port;
 
-    public function __construct()
+    protected $appliesInCurrentEnvironment = false;
+
+    public function __construct(EnvironmentCollection $env)
     {
-        $this->redis_host = getenv('REDIS_HOST') ?: 'redis';
-        $this->redis_port = getenv('REDIS_SERVICE_PORT') ?: 6379;
+        if($env->has('REDIS_HOST', 'REDIS_SERVICE_PORT')) {
+            $this->redis_host = $env->get('REDIS_HOST');
+            $this->redis_port = $env->get('REDIS_SERVICE_PORT');
+            $this->appliesInCurrentEnvironment = true;
+        }
     }
 
     public function appliesInCurrentEnvironment()
     {
-        return true;
+        return $this->appliesInCurrentEnvironment;
     }
 
     public function result()

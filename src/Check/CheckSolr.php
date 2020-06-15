@@ -2,6 +2,7 @@
 
 namespace AmazeeIO\Health\Check;
 
+use AmazeeIO\Health\EnvironmentCollection;
 use Solarium\Client;
 use Solarium\Core\Client\Adapter\Curl;
 use Symfony\Component\EventDispatcher\EventDispatcher;
@@ -11,21 +12,24 @@ class CheckSolr implements CheckInterface
 {
 
     protected $applies = false;
+
     protected $solrHost;
+
     protected $solrCore = 'drupal';
+
     protected $solrUser;
+
     protected $solrPassword;
 
-    public function __construct($environment = [])
+    public function __construct(EnvironmentCollection $env)
     {
-        if(!empty($environment['SOLR_PORT']))
-        {
+        if ($env->has(['SOLR_PORT'])) {
             $this->applies = true;
-            $this->solrHost = $environment['SOLR_PORT'] ?: '8983';
-            $this->solrHost = $environment['SOLR_HOST'] ?: 'solr';
-            $this->solrCore = $environment['SOLR_CORE'] ?: 'drupal';
-            $this->solrUser = $environment['SOLR_USER'] ?: 'drupal';
-            $this->solrPassword = $environment['SOLR_PASSWORD'] ?: 'drupal';
+            $this->solrHost = $env->get('SOLR_PORT');
+            $this->solrHost = $env->get('SOLR_HOST', 'solr');
+            $this->solrCore = $env->get('SOLR_CORE', 'drupal');
+            $this->solrUser = $env->get('SOLR_USER', 'drupal');
+            $this->solrPassword = $env->get('SOLR_PASSWORD', 'drupal');
         }
     }
 
@@ -36,16 +40,16 @@ class CheckSolr implements CheckInterface
 
     public function result()
     {
-        $config = array(
-          'endpoint' => array(
-            'localhost' => array(
+        $config = [
+          'endpoint' => [
+            'localhost' => [
               'host' => $this->solrHost,
               'port' => $this->solrPort,
               'path' => '/',
               'core' => $this->solrCore,
-            )
-          )
-        );
+            ],
+          ],
+        ];
 
         try {
             $client = new Client(
@@ -57,7 +61,7 @@ class CheckSolr implements CheckInterface
             $ping = $client->createPing();
             $result = $client->ping($ping);
 
-            if(($result->getData())['status'] == 'OK') {
+            if (($result->getData())['status'] == 'OK') {
                 return true;
             }
 
@@ -71,7 +75,7 @@ class CheckSolr implements CheckInterface
 
     public function status()
     {
-        if(!$this->result()) {
+        if (!$this->result()) {
             return self::STATUS_FAIL;
         }
 

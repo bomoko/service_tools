@@ -2,6 +2,8 @@
 
 namespace AmazeeIO\Health\Check;
 
+use AmazeeIO\Health\EnvironmentCollection;
+
 /**
  * Class CheckNginx
  *
@@ -13,6 +15,10 @@ namespace AmazeeIO\Health\Check;
  */
 class CheckNginx implements CheckInterface
 {
+    public function __construct(
+      \AmazeeIO\Health\EnvironmentCollection $environment
+    ) {
+    }
 
     public function appliesInCurrentEnvironment()
     {

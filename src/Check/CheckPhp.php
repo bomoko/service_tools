@@ -2,6 +2,8 @@
 
 namespace AmazeeIO\Health\Check;
 
+use AmazeeIO\Health\EnvironmentCollection;
+
 /**
  * Class CheckPhp
  *
@@ -14,16 +16,21 @@ namespace AmazeeIO\Health\Check;
 class CheckPhp implements CheckInterface
 {
 
+    public function __construct(
+      \AmazeeIO\Health\EnvironmentCollection $environment
+    ) {
+    }
+
     public function appliesInCurrentEnvironment()
     {
         return true;
     }
 
+
     public function result()
     {
         return true;
     }
-
 
     public function status()
     {

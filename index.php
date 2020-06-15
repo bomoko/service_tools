@@ -11,8 +11,6 @@ $driver = new CheckDriver();
 
 //TODO: maybe we can make this prettier - passing a list of classnames?
 
-var_dump($_SERVER);
-
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckMariadbRDS($_SERVER));
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckRedis($_SERVER));
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckNginx($_SERVER));
@@ -28,6 +26,7 @@ function setHeaders(\AmazeeIO\Health\Format\FormatInterface $formatter) {
     header('Content-Type: ' . $formatter->httpHeaderContentType());
 }
 
+$formatter = new \AmazeeIO\Health\Format\JsonFormat($driver);
 
-setHeaders(new \AmazeeIO\Health\Format\JsonFormat($driver));
-echo json_encode(["healthy" => $checkPass]);
+setHeaders($formatter);
+echo $formatter->formattedResults();

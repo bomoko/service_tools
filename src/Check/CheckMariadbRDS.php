@@ -21,7 +21,13 @@ class CheckMariadbRDS implements CheckInterface
 
     public function __construct(EnvironmentCollection $env)
     {
-        if ($env->has(['AMAZEEIO_DB_HOST', 'AMAZEEIO_DB_USERNAME', 'AMAZEEIO_DB_PASSWORD'])) {
+        if ($env->has(['MARIADB_HOST', 'MARIADB_USERNAME', 'MARIADB_PASSWORD'])) {
+            $this->appliesInCurrentEnvironment = true;
+            $this->db_host = $env->get('MARIADB_HOST');
+            $this->db_username = $env->get('MARIADB_USERNAME');
+            $this->db_password = $env->get('MARIADB_PASSWORD');
+            $this->db_database = $env->get('MARIADB_DATABASE');
+        } else if ($env->has(['AMAZEEIO_DB_HOST', 'AMAZEEIO_DB_USERNAME', 'AMAZEEIO_DB_PASSWORD'])) {
             $this->appliesInCurrentEnvironment = true;
             $this->db_host = $env->get('AMAZEEIO_DB_HOST');
             $this->db_username = $env->get('AMAZEEIO_DB_USERNAME');

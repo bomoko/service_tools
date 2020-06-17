@@ -24,7 +24,7 @@ $serverRequest = $creator->fromGlobals();
 
 $driver = new CheckDriver();
 
-$driver->registerCheck(new \AmazeeIO\Health\Check\CheckMariadbRDS($environment));
+$driver->registerCheck(new \AmazeeIO\Health\Check\CheckMariadb($environment));
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckRedis($environment));
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckNginx($environment));
 $driver->registerCheck(new \AmazeeIO\Health\Check\CheckPhp($environment));

@@ -5,7 +5,7 @@ namespace AmazeeIO\Health\Check;
 
 use AmazeeIO\Health\EnvironmentCollection;
 
-class CheckMariadbRDS implements CheckInterface
+class CheckMariadb implements CheckInterface
 {
 
     protected $appliesInCurrentEnvironment = false;

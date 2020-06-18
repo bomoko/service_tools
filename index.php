@@ -31,7 +31,7 @@ $formatter = new \AmazeeIO\Health\Format\JsonFormat($driver);
 
 $responseBody = $psr17Factory->createStream($formatter->formattedResults());
 $response = $psr17Factory->createResponse($driver->pass() ? 200 : 500)->withBody($responseBody)
-  ->withHeader('Cache-Control','no-store')
+  ->withHeader('Cache-Control','must-revalidate, no-cache, private')
   ->withHeader('Vary','User-Agent')
   ->withHeader('Content-Type', $formatter->httpHeaderContentType());
 

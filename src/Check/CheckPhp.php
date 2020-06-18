@@ -13,7 +13,7 @@ use AmazeeIO\Health\EnvironmentCollection;
  *
  * @package AmazeeIO\Health\Check
  */
-class CheckPhp implements CheckInterface
+class CheckPhp extends BooleanCheck
 {
 
     public function __construct(
@@ -27,7 +27,7 @@ class CheckPhp implements CheckInterface
     }
 
 
-    public function result()
+    public function result(): bool
     {
         return true;
     }

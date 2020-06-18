@@ -5,7 +5,7 @@ namespace AmazeeIO\Health\Check;
 
 use AmazeeIO\Health\EnvironmentCollection;
 
-class CheckMariadb implements CheckInterface
+class CheckMariadb extends BooleanCheck
 {
 
     protected $appliesInCurrentEnvironment = false;
@@ -41,7 +41,7 @@ class CheckMariadb implements CheckInterface
         return $this->appliesInCurrentEnvironment;
     }
 
-    public function result()
+    public function result(): bool
     {
         try {
             $db = $this->getConnection();

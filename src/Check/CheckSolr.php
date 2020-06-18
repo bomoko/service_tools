@@ -8,7 +8,7 @@ use Solarium\Core\Client\Adapter\Curl;
 use Symfony\Component\EventDispatcher\EventDispatcher;
 
 
-class CheckSolr implements CheckInterface
+class CheckSolr extends BooleanCheck
 {
 
     protected $applies = false;
@@ -38,7 +38,7 @@ class CheckSolr implements CheckInterface
         return $this->applies;
     }
 
-    public function result()
+    public function result(): bool
     {
         $config = [
           'endpoint' => [

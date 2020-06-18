@@ -27,46 +27,45 @@ class CheckDriver implements CheckDriverInterface
 
     public function runChecks()
     {
-        if(count($this->applicableChecks) == 0)
-        {
+        if (count($this->applicableChecks) == 0) {
             throw new NoApplicableCheckException("There were no applicable checks that could be run in this environment");
         }
 
-        $checkResults = [];
         $checkStatuses = [];
         foreach ($this->applicableChecks as $name => $check) {
-            $checkResults[$check->shortName()] = $check->result();
             $checkStatuses[$check->shortName()] = $check->status();
         }
 
-        $this->lastRunResults = $checkResults;
         $this->lastRunResultStatuses = $checkStatuses;
         $this->hasRun = true;
-        return $checkResults;
+        return $checkStatuses;
     }
 
 
     public function pass()
     {
-        if(!$this->hasRun) {
+        if (!$this->hasRun) {
             $this->runChecks();
         }
 
-        return array_reduce($this->lastRunResults, function ($carry, $element) {
-            return $carry && $element;
-            }, true);
+        if ($this->status() == CheckInterface::STATUS_FAIL) {
+            return false;
+        }
+
+        return true;
+
     }
 
     public function status()
     {
-        if(!$this->hasRun) {
+        if (!$this->hasRun) {
             $this->runChecks();
         }
 
         $warning = false;
 
         foreach ($this->lastRunResultStatuses as $status) {
-            switch($status) {
+            switch ($status) {
                 case(CheckInterface::STATUS_FAIL):
                     return CheckInterface::STATUS_FAIL;
                     break;

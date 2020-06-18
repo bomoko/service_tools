@@ -13,7 +13,7 @@ use AmazeeIO\Health\EnvironmentCollection;
  *
  * @package AmazeeIO\Health\Check
  */
-class CheckNginx implements CheckInterface
+class CheckNginx  extends BooleanCheck
 {
     public function __construct(
       \AmazeeIO\Health\EnvironmentCollection $environment
@@ -25,7 +25,7 @@ class CheckNginx implements CheckInterface
         return true;
     }
 
-    public function result()
+    public function result(): bool
     {
         return true;
     }

@@ -6,7 +6,7 @@ use AmazeeIO\Health\EnvironmentCollection;
 use Predis\Client;
 
 
-class CheckRedis implements CheckInterface
+class CheckRedis extends BooleanCheck
 {
 
     protected $redis_host;
@@ -29,10 +29,9 @@ class CheckRedis implements CheckInterface
         return $this->appliesInCurrentEnvironment;
     }
 
-    public function result()
+    public function result(): bool
     {
         try {
-            //TODO: add reasonable timeout (.5 seconds)
             $client = new Client([
               'scheme' => 'tcp',
               'host' => $this->redis_host,

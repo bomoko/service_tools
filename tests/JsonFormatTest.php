@@ -21,14 +21,15 @@ class JsonFormatTest extends TestCase
         $formatterOutputAsArray = json_decode($formatterOutput, true);
         $this->assertIsArray($formatterOutputAsArray);
         $this->assertArrayHasKey('test_check_1', $formatterOutputAsArray);
-        $this->assertEquals(true, $formatterOutputAsArray['test_check_1']);
+        $this->assertEquals(\AmazeeIO\Health\Check\CheckInterface::STATUS_PASS, $formatterOutputAsArray['test_check_1']);
     }
 
     protected function generateCheck(
       $shortName,
       $description = "",
       $applies = true,
-      $passes = true
+      $passes = true,
+      $status = \AmazeeIO\Health\Check\CheckInterface::STATUS_PASS
     ) {
         $check = $this->createMock(\AmazeeIO\Health\Check\CheckInterface::class);
         $check->method('shortName')->willReturn($shortName);
@@ -36,9 +37,9 @@ class JsonFormatTest extends TestCase
         $check->expects($this->atLeastOnce())
           ->method('appliesInCurrentEnvironment')
           ->willReturn($applies);
-        $check->expects($applies ? $this->once() : $this->never())
-          ->method('result')
+        $check->method('result')
           ->willReturn($passes);
+        $check->method('status')->willReturn($status);
         return $check;
     }
 }

@@ -25,4 +25,4 @@ The status of the check as a whole is determined by the _most negative_ applicab
 That is, if any one of the checks return a `STATUS_FAIL`, the entire check is considered to have failed.
 If any one check returns a `STATUS_WARN`, the entire system check is considered to be in a warning state.
 
-When you have created your checks you register them in the `index.php` file. 
+When you have created your checks you register them in the `checks.conf.php` file. 

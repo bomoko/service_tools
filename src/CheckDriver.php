@@ -8,6 +8,8 @@ use AmazeeIO\Health\Check\CheckInterface;
 class CheckDriver implements CheckDriverInterface
 {
 
+    protected $environment;
+
     protected $registeredChecks = [];
 
     protected $applicableChecks = [];
